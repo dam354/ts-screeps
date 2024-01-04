@@ -1,55 +1,61 @@
-# Screeps Typescript Starter
+# [Screeps AI: TypeScript Edition]
 
-Screeps Typescript Starter is a starting point for a Screeps AI written in Typescript. It provides everything you need to start writing your AI whilst leaving `main.ts` as empty as possible.
+Screeps AI: TypeScript Edition is a custom AI for Screeps, leveraging TypeScript for more robust and maintainable code. This project extends the Screeps Typescript Starter by introducing additional utilities for creep task management and execution.
 
-## Basic Usage
+## Screeps To-Do List
 
-You will need:
+### Creep Management
 
-- [Node.JS](https://nodejs.org/en/download) (10.x || 12.x)
-- A Package Manager ([Yarn](https://yarnpkg.com/en/docs/getting-started) or [npm](https://docs.npmjs.com/getting-started/installing-node))
-- Rollup CLI (Optional, install via `npm install -g rollup`)
+- [ ] Develop and refine creep roles for efficient task execution based on environmental conditions.
+- [ ] Implement a dynamic task/goal assignment system for generic creeps adaptable to changing colony needs.
+- [ ] Enhance the logic for creeps to switch tasks/goals as per the colony's current requirements.
 
-Download the latest source [here](https://github.com/screepers/screeps-typescript-starter/archive/master.zip) and extract it to a folder.
+### Automatic Spawning
 
-Open the folder in your terminal and run your package manager to install the required packages and TypeScript declaration files:
+- [ ] Create an advanced headcount system for automatic creep replacement and adjustment based on colony needs.
+- [ ] Implement Part-Count Balancing to optimize creep sizes and roles in relation to current resource demands.
+- [ ] Develop a robust spawn queue system for efficient and prioritized creep production.
+- [ ] Design a cold-boot mechanism to ensure colony recovery and restart in case of total creep loss.
 
-```bash
-# npm
-npm install
+### Automatic Room Defense
 
-# yarn
-yarn
-```
+- [ ] Set up and refine tower defense strategies for optimal effectiveness against invaders and enemy users.
+- [ ] Develop creep-based defense strategies, including rampart-defenders and active-counter measures.
+- [ ] Implement repair spam tactics to counteract enemy damage during invasions.
+- [ ] Integrate SafeMode activation in critical scenarios for temporary invulnerability.
 
-Fire up your preferred editor with typescript installed and you are good to go!
+### Energy Harvesting and Remote Mining
 
-### Rollup and code upload
+- [ ] Optimize energy harvesting strategies to maximize resource utilization (Kardashev scale approach).
+- [ ] Establish efficient remote mining operations for supplementing main room energy resources.
+- [ ] Develop methods for harvesting and hauling resources from highway locations and Source-Keeper rooms.
+- [ ] Implement advanced scouting and information storage techniques for identifying and exploiting resource opportunities.
 
-Screeps Typescript Starter uses rollup to compile your typescript and upload it to a screeps server.
+### Market and Resource Management
 
-Move or copy `screeps.sample.json` to `screeps.json` and edit it, changing the credentials and optionally adding or removing some of the destinations.
+- [ ] Automate market interactions for buying/selling resources and acquiring first credits.
+- [ ] Set up lab logic and boost production for enhanced creep abilities and efficiency.
+- [ ] Create an automated factory system for commodity production and market exchange.
 
-Running `rollup -c` will compile your code and do a "dry run", preparing the code for upload but not actually pushing it. Running `rollup -c --environment DEST:main` will compile your code, and then upload it to a screeps server using the `main` config from `screeps.json`.
+### Advanced Strategies and Room Expansion
 
-You can use `-cw` instead of `-c` to automatically re-run when your source code changes - for example, `rollup -cw --environment DEST:main` will automatically upload your code to the `main` configuration every time your code is changed.
+- [ ] Develop offensive strategies for room acquisition and enemy colony engagement.
+- [ ] Implement intershard operations for expanded colony influence and resource acquisition.
+- [ ] Automate stronghold attacks for resource gain and strategic advantages.
 
-Finally, there are also NPM scripts that serve as aliases for these commands in `package.json` for IDE integration. Running `npm run push-main` is equivalent to `rollup -c --environment DEST:main`, and `npm run watch-sim` is equivalent to `rollup -cw --dest sim`.
+### Pathfinding and Room Planning
 
-#### Important! To upload code to a private server, you must have [screepsmod-auth](https://github.com/ScreepsMods/screepsmod-auth) installed and configured!
+- [ ] Optimize pathfinding algorithms and caching for efficient creep movement.
+- [ ] Automate room planning and building for efficient base development and expansion.
 
-## Typings
+## Acknowledgements
 
-The type definitions for Screeps come from [typed-screeps](https://github.com/screepers/typed-screeps). If you find a problem or have a suggestion, please open an issue there.
+This project is based on the [Screeps Typescript Starter](https://github.com/screepers/screeps-typescript-starter), a comprehensive starting point for building a Screeps AI using TypeScript. Full credit goes to the original authors for providing the foundation upon which this project is built.
 
-## Documentation
+### Original Screeps Typescript Starter Readme
 
-We've also spent some time reworking the documentation from the ground-up, which is now generated through [Gitbooks](https://www.gitbook.com/). Includes all the essentials to get you up and running with Screeps AI development in TypeScript, as well as various other tips and tricks to further improve your development workflow.
+For the original README, please refer to the [Screeps Typescript Starter README](https://github.com/screepers/screeps-typescript-starter).
 
-Maintaining the docs will also become a more community-focused effort, which means you too, can take part in improving the docs for this starter kit.
+## Contribution
 
-To visit the docs, [click here](https://screepers.gitbook.io/screeps-typescript-starter/).
-
-## Contributing
-
-Issues, Pull Requests, and contribution to the docs are welcome! See our [Contributing Guidelines](CONTRIBUTING.md) for more details.
+[Your notes on how others can contribute to your project, if you're open to contributions.]
