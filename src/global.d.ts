@@ -19,6 +19,7 @@ declare global {
     performTask(task: Task): void;
     performHarvestTask(task: Task): void;
     performUpgradeTask(task: Task): void;
+    performFillContainerTask(task: Task): void;
     deliverEnergy(): void;
   }
 

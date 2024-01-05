@@ -19,6 +19,7 @@ export class Task {
 
   // Method to convert the task into a string for storage in Memory.
   serialize(): string {
+    console.log(`Serializing task ${this.id} of type ${this.type}`);
     return JSON.stringify({
       type: this.type,
       priority: this.priority,
@@ -30,13 +31,16 @@ export class Task {
   // Static method to convert a string from Memory back into a Task object.
   static deserialize(data: string): Task {
     const taskData = JSON.parse(data);
+    console.log(`Deserializing task ${taskData.id} of type ${taskData.type}`);
     const location = new RoomPosition(taskData.location.x, taskData.location.y, taskData.location.roomName);
     return new Task(taskData.type, taskData.priority, location, taskData.id);
   }
 
   // Method to check if a creep is suitable for this task.
   isSuitableFor(creep: Creep): boolean {
-    return creep.memory.role === "worker" && creep.room.name === this.location.roomName;
+    const isSuitable = creep.memory.role === "worker" && creep.room.name === this.location.roomName;
+    console.log(`Checking if creep ${creep.name} is suitable for task ${this.id}: ${isSuitable}`);
+    return isSuitable;
   }
 }
 
@@ -50,28 +54,28 @@ export class TaskManager {
     }
   }
 
-  // Method to add a task to Memory.
   addTask(task: Task): void {
+    console.log(`Adding Task to Memory: ${task.id}`);
     Memory.tasks.push(task.serialize());
   }
 
-  // Method to get all tasks from Memory.
   getTasks(): Task[] {
+    console.log("Retrieving all tasks from Memory");
     return Memory.tasks.map(Task.deserialize);
   }
 
-  // Method to get a suitable task for a specific creep.
   getTaskForCreep(creep: Creep): Task | undefined {
+    console.log(`Retrieving suitable task for Creep: ${creep.name}`);
     return this.getTasks().find(task => task.isSuitableFor(creep));
   }
 
-  // Method to remove a task from Memory.
   completeTask(taskIndex: number): void {
+    console.log(`Completing Task at index: ${taskIndex}`);
     Memory.tasks.splice(taskIndex, 1);
   }
 
-  // Method to sort tasks by priority.
   prioritizeTasks(): void {
+    console.log("Prioritizing tasks");
     const tasks = this.getTasks();
     tasks.sort((a, b) => a.priority - b.priority);
     Memory.tasks = tasks.map(task => task.serialize());

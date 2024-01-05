@@ -10,75 +10,94 @@ const taskManager = new TaskManager();
 export const loop = ErrorMapper.wrapLoop(() => {
   console.log(`Current game tick is ${Game.time}`);
 
-  // Maximum number of creeps allowed.
-  const MAX_CREEPS = 2;
-  // Current number of creeps in the game.
+  const MAX_CREEPS = 1;
   const creeps = Object.keys(Game.creeps).length;
 
-  // Check if the number of creeps is less than the maximum allowed.
+  console.log(`Current number of creeps: ${creeps}, Max allowed: ${MAX_CREEPS}`);
+
   if (creeps < MAX_CREEPS) {
-    // Generate a new name for the creep based on the current game time.
     const newName = "Creep" + Game.time;
-    // Spawn a new creep with specified body parts and memory settings.
+    console.log(`Spawning new creep: ${newName}`);
     Game.spawns["Spawn1"].spawnCreep([WORK, CARRY, MOVE], newName, {
       memory: { role: "worker", room: Game.spawns["Spawn1"].room.name, working: false }
     });
+  } else {
+    console.log("Maximum number of creeps reached, not spawning more.");
   }
 
-  // Generate tasks for creeps to perform.
+  console.log("Generating tasks for creeps.");
   generateTasks();
 
-  // Prioritize the tasks in the task manager.
+  console.log("Prioritizing tasks in the task manager.");
   taskManager.prioritizeTasks();
 
-  // Iterate through all creeps and assign tasks.
   for (let name in Game.creeps) {
     let creep = Game.creeps[name];
-    // Update each creep's working state based on their current capacity.
+    console.log(`Updating working state for Creep ${name}.`);
     updateCreepWorkingState(creep);
+    let task = taskManager.getTaskForCreep(creep);
+    if (task) {
+      console.log(`Creep ${name} assigned task: ${task.type}, id: ${task.id}`);
+      creep.performTask(task);
 
-    // Assign tasks to creeps based on their working state.
-    if (creep.memory.working) {
-      let task = taskManager.getTaskForCreep(creep);
-      if (task) {
-        // Perform the assigned task if available.
-        creep.performTask(task);
-      }
+      // Update working state based on the task being performed
+      updateCreepWorkingState(creep);
     } else {
-      // Move idle creeps to the spawn point.
+      console.log(`No suitable task found for Creep ${name}, moving to spawn.`);
       creep.moveTo(Game.spawns["Spawn1"]);
     }
   }
 
-  // Clean up memory of dead creeps.
+  console.log("Cleaning up memory of dead creeps.");
   cleanupMemory();
 });
 
 function generateTasks() {
   const room = Game.spawns["Spawn1"].room;
-  // Find active sources in the room.
   const sources = room.find(FIND_SOURCES_ACTIVE);
   const controller = room.controller;
+  const containers = room.find(FIND_STRUCTURES, { filter: s => s.structureType === STRUCTURE_CONTAINER });
 
-  // Add a harvest task for each active source if not already present.
   sources.forEach(source => {
     if (!taskManager.getTasks().some(task => task.type === "harvest" && task.id === source.id)) {
       taskManager.addTask(new Task("harvest", 1, source.pos, source.id));
     }
   });
 
-  // Add an upgrade task for the controller if not already present.
+  containers.forEach(container => {
+    if (!taskManager.getTasks().some(task => task.type === "fill container" && task.id === container.id)) {
+      taskManager.addTask(new Task("fill container", 2, container.pos, container.id));
+    }
+  });
+
   if (controller && !taskManager.getTasks().some(task => task.type === "upgrade" && task.id === controller.id)) {
-    taskManager.addTask(new Task("upgrade", 2, controller.pos, controller.id));
+    taskManager.addTask(new Task("upgrade", 3, controller.pos, controller.id));
   }
 }
 
 function updateCreepWorkingState(creep: Creep) {
-  // Switch the working state of the creep based on its storage capacity.
-  if (creep.store.getUsedCapacity() === 0 && creep.memory.working) {
-    creep.memory.working = false;
-  } else if (creep.store.getFreeCapacity() === 0 && !creep.memory.working) {
-    creep.memory.working = true;
+  if (creep.store.getUsedCapacity() === 0 && !creep.memory.working) {
+    return;
+  }
+
+  if (creep.store.getFreeCapacity() === 0 && creep.memory.working) {
+    return;
+  }
+
+  const currentTask = taskManager.getTaskForCreep(creep);
+  if (currentTask) {
+    if (
+      (currentTask.type === "harvest" || currentTask.type === "fill container") &&
+      creep.store.getFreeCapacity() > 0
+    ) {
+      creep.memory.working = true;
+    } else if (
+      currentTask.type !== "harvest" &&
+      currentTask.type !== "fill container" &&
+      creep.store.getUsedCapacity() > 0
+    ) {
+      creep.memory.working = false;
+    }
   }
 }
 
@@ -86,6 +105,7 @@ function cleanupMemory() {
   // Remove memory entries for creeps that no longer exist in the game.
   for (const name in Memory.creeps) {
     if (!(name in Game.creeps)) {
+      console.log(`Creep ${name} no longer exists, removing from memory.`);
       delete Memory.creeps[name];
     }
   }
